@@ -238,7 +238,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="countdown">
       <div class="countdown-left">
         <span class="countdown-label">⏳ Contagem para a prova</span>
-        <span class="countdown-date">17 de outubro de 2025</span>
+        <span class="countdown-date">17 de outubro de 2026 (previsão)</span>
       </div>
       <div class="countdown-numbers" id="countdown-numbers"></div>
     </div>
@@ -281,19 +281,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="meta-box-title">🎯 Meta de horas desta semana</div>
       <div class="meta-field-row">
         <span class="meta-field-label">Matemática</span>
-        <input class="meta-field-input" type="number" min="0" max="40" step="0.5" placeholder="ex: 10" id="meta-mat">
+        <input class="meta-field-input" type="number" min="0" max="4320" step="5" placeholder="ex: 10" id="meta-mat">
       </div>
       <div class="meta-field-row">
         <span class="meta-field-label">Português</span>
-        <input class="meta-field-input" type="number" min="0" max="40" step="0.5" placeholder="ex: 4" id="meta-por">
+        <input class="meta-field-input" type="number" min="0" max="4320" step="5" placeholder="ex: 4" id="meta-por">
       </div>
       <div class="meta-field-row">
         <span class="meta-field-label">Redação</span>
-        <input class="meta-field-input" type="number" min="0" max="40" step="0.5" placeholder="ex: 2" id="meta-red">
+        <input class="meta-field-input" type="number" min="0" max="4320" step="5" placeholder="ex: 2" id="meta-red">
       </div>
       <div class="meta-field-row">
         <span class="meta-field-label">Total semana</span>
-        <input class="meta-field-input" type="number" min="0" max="60" step="0.5" placeholder="ex: 9.7" id="meta-total">
+        <input class="meta-field-input" type="number" min="0" max="4320" step="5" placeholder="ex: 9.7" id="meta-total">
       </div>
       <div style="margin-top:6px">
         <div class="sec-label" style="margin-bottom:5px">Observações sobre esta semana</div>
@@ -352,7 +352,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script>
 var SENHA='soucmbh2027';
-var PROVA_DATE=new Date('2025-10-17T08:00:00');
+var PROVA_DATE=new Date('2026-10-17T08:00:00');
 
 function checkPwd(){
   var v=document.getElementById('pwd-input').value;
@@ -374,7 +374,8 @@ function logout(){
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('pwd-input').value='';
 }
-document.addEventListener('DOMContentLoaded', function(){
+// runs after full DOM load
+window.addEventListener('load', function(){
   if(sessionStorage.getItem('qc_auth')==='1'){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
@@ -523,9 +524,23 @@ function dayData(key){
   return wkData[key];
 }
 
+function minsToHours(v){ return (parseFloat(v)||0)/60; }
 function getDayTotal(dd){
-  return (parseFloat(dd.mat_h)||0)+(parseFloat(dd.por_h)||0)+(parseFloat(dd.red_h)||0)+
-    (parseFloat(dd.extra_cursinho)||0)+(parseFloat(dd.extra_escola)||0)+(parseFloat(dd.extra_outro)||0);
+  return minsToHours(dd.mat_h)+minsToHours(dd.por_h)+minsToHours(dd.red_h)+
+    minsToHours(dd.extra_cursinho)+minsToHours(dd.extra_escola)+minsToHours(dd.extra_outro);
+}
+function fmtMins(v){
+  var mins=parseFloat(v)||0;
+  if(mins<60) return mins+'min';
+  var h=Math.floor(mins/60), m=mins%60;
+  return h+'h'+(m>0?m+'min':'');
+}
+function fmtHours(h){
+  if(h===0)return '0min';
+  var totalMins=Math.round(h*60);
+  if(totalMins<60)return totalMins+'min';
+  var hh=Math.floor(totalMins/60),mm=totalMins%60;
+  return hh+'h'+(mm>0?mm+'min':'');
 }
 
 function simulPct(c,t){
@@ -535,8 +550,8 @@ function simulPct(c,t){
 }
 function simulColor(pct){
   if(pct===null)return '#9CA3AF';
-  if(pct>=80)return '#15803D';
-  if(pct>=60)return '#D97706';
+  if(pct>=90)return '#15803D';
+  if(pct>=70)return '#D97706';
   return '#DC2626';
 }
 
@@ -567,9 +582,9 @@ function renderCards(){
       return '<label class="chk'+(ok?' checked':'')+'"><input type="checkbox" data-day="'+day.key+'" data-chk="'+ch+'" '+(ok?'checked':'')+'>'+ch+'</label>';
     }).join('');
 
-    var matPct=Math.min(100,((parseFloat(dd.mat_h)||0)/5)*100);
-    var porPct=Math.min(100,((parseFloat(dd.por_h)||0)/2)*100);
-    var redPct=Math.min(100,((parseFloat(dd.red_h)||0)/1)*100);
+    var matPct=Math.min(100,(minsToHours(dd.mat_h)/5)*100);
+    var porPct=Math.min(100,(minsToHours(dd.por_h)/2)*100);
+    var redPct=Math.min(100,(minsToHours(dd.red_h)/1)*100);
     var totalBadge=total>=day.target&&day.target>0?'ok':total>0&&day.target>0?'warn':'';
 
     var smPct=simulPct(dd.sim_mat_c,dd.sim_mat_t);
@@ -592,13 +607,13 @@ function renderCards(){
         '<div><div class="sec-label">Horas por matéria</div>'+
           '<div class="mat-hours-grid">'+
             '<div class="mat-hour-row"><span class="mat-label" style="color:#667eea">Matemática</span>'+
-              '<input class="mat-hi" type="number" min="0" max="12" step="0.25" placeholder="0h" value="'+(dd.mat_h||'')+'" data-day="'+day.key+'" data-field="mat_h">'+
+              '<input class="mat-hi" type="number" min="0" max="720" step="5" placeholder="0min" value="'+(dd.mat_h||'')+'" data-day="'+day.key+'" data-field="mat_h">'+
               '<div class="mat-bar-wrap"><div class="mat-bar" style="background:#667eea;width:'+matPct+'%"></div></div></div>'+
             '<div class="mat-hour-row"><span class="mat-label" style="color:#f97316">Português</span>'+
-              '<input class="mat-hi" type="number" min="0" max="12" step="0.25" placeholder="0h" value="'+(dd.por_h||'')+'" data-day="'+day.key+'" data-field="por_h">'+
+              '<input class="mat-hi" type="number" min="0" max="720" step="5" placeholder="0min" value="'+(dd.por_h||'')+'" data-day="'+day.key+'" data-field="por_h">'+
               '<div class="mat-bar-wrap"><div class="mat-bar" style="background:#f97316;width:'+porPct+'%"></div></div></div>'+
             '<div class="mat-hour-row"><span class="mat-label" style="color:#ec4899">Redação</span>'+
-              '<input class="mat-hi" type="number" min="0" max="12" step="0.25" placeholder="0h" value="'+(dd.red_h||'')+'" data-day="'+day.key+'" data-field="red_h">'+
+              '<input class="mat-hi" type="number" min="0" max="720" step="5" placeholder="0min" value="'+(dd.red_h||'')+'" data-day="'+day.key+'" data-field="red_h">'+
               '<div class="mat-bar-wrap"><div class="mat-bar" style="background:#ec4899;width:'+redPct+'%"></div></div></div>'+
           '</div>'+
         '</div>'+
@@ -640,11 +655,11 @@ function renderCards(){
         '<div><div class="sec-label">Horas adicionais</div>'+
           '<div class="extras-grid">'+
             '<div class="extra-row"><span class="extra-label">📚 Sem cursinho</span>'+
-              '<input class="extra-hi" type="number" min="0" max="12" step="0.25" placeholder="0h" value="'+(dd.extra_cursinho||'')+'" data-day="'+day.key+'" data-field="extra_cursinho"></div>'+
+              '<input class="extra-hi" type="number" min="0" max="720" step="5" placeholder="0min" value="'+(dd.extra_cursinho||'')+'" data-day="'+day.key+'" data-field="extra_cursinho"></div>'+
             '<div class="extra-row"><span class="extra-label">🏫 Sem escola</span>'+
-              '<input class="extra-hi" type="number" min="0" max="12" step="0.25" placeholder="0h" value="'+(dd.extra_escola||'')+'" data-day="'+day.key+'" data-field="extra_escola"></div>'+
+              '<input class="extra-hi" type="number" min="0" max="720" step="5" placeholder="0min" value="'+(dd.extra_escola||'')+'" data-day="'+day.key+'" data-field="extra_escola"></div>'+
             '<div class="extra-row"><span class="extra-label">➕ Outro motivo</span>'+
-              '<input class="extra-hi" type="number" min="0" max="12" step="0.25" placeholder="0h" value="'+(dd.extra_outro||'')+'" data-day="'+day.key+'" data-field="extra_outro">'+
+              '<input class="extra-hi" type="number" min="0" max="720" step="5" placeholder="0min" value="'+(dd.extra_outro||'')+'" data-day="'+day.key+'" data-field="extra_outro">'+
               '<input class="extra-note" type="text" placeholder="qual motivo?" value="'+(dd.extra_outro_nota||'')+'" data-day="'+day.key+'" data-field="extra_outro_nota"></div>'+
           '</div>'+
         '</div>'+
@@ -652,7 +667,7 @@ function renderCards(){
 
         '<div class="hours-total-row">'+
           '<span class="hl">Total do dia:</span>'+
-          '<span class="total-badge '+totalBadge+'" id="total-'+day.key+'">'+total.toFixed(2).replace(/\.?0+$/,'')+'h</span>'+
+          '<span class="total-badge '+totalBadge+'" id="total-'+day.key+'">'+fmtHours(total)+'</span>'+
           (day.target>0?'<span style="font-size:11px;color:#9CA3AF">de '+(day.target<1?'40min':day.target+'h')+'</span>':'')+
         '</div>'+
         '<div class="divider"></div>'+
@@ -695,7 +710,7 @@ function renderCards(){
       var dayDef=DAYS.find(function(d){return d.key===el.dataset.day;});
       var tb=document.getElementById('total-'+el.dataset.day);
       if(tb){
-        tb.textContent=total.toFixed(2).replace(/\.?0+$/,'')+'h';
+        tb.textContent=fmtHours(total);
         tb.className='total-badge'+(total>=dayDef.target&&dayDef.target>0?' ok':total>0&&dayDef.target>0?' warn':'');
       }
       var card=el.closest('.card');
@@ -797,7 +812,7 @@ function renderCronos(){
   CRONOS.forEach(function(cr){
     var st=cronoState[cr.key];
     var accum=0;
-    DAYS.forEach(function(d){accum+=parseFloat((wkData[d.key]||{})[cr.field])||0;});
+    DAYS.forEach(function(d){accum+=minsToHours((wkData[d.key]||{})[cr.field]||0);});
     var div=document.createElement('div');
     div.className='crono-card';
     div.innerHTML=
@@ -813,7 +828,7 @@ function renderCronos(){
         '<button class="crono-btn crono-reset" onclick="cronoReset(\''+cr.key+'\')">↺</button>'+
       '</div>'+
       '<button class="crono-confirm'+(st.elapsed>0&&!st.running?' show':'')+'" id="crono-confirm-'+cr.key+'" onclick="cronoConfirm(\''+cr.key+'\',\''+cr.field+'\')">'+
-        '✓ Adicionar '+fmtTime(st.elapsed)+' ('+msToHours(st.elapsed).toFixed(2)+'h) ao dia de hoje em '+cr.label+
+        '✓ Adicionar '+fmtTime(st.elapsed)+' ao dia de hoje em '+cr.label+
       '</button>';
     container.appendChild(div);
   });
@@ -844,13 +859,14 @@ function cronoReset(key){
 function cronoConfirm(key,field){
   var st=cronoState[key];
   var hours=msToHours(st.elapsed);
+  var addMins=Math.round(hours*60/5)*5; // round to nearest 5 min
   var dayKeys=['dom','seg','ter','qua','qui','sex','sab'];
   var todayKey=dayKeys[new Date().getDay()];
   var dd=dayData(todayKey);
-  var current=parseFloat(dd[field])||0;
-  dd[field]=String(Math.round((current+hours)*100)/100);
+  var currentMins=parseFloat(dd[field])||0;
+  dd[field]=String(currentMins+addMins);
   scheduleSave();cronoReset(key);renderCards();renderCronos();
-  alert('✓ '+hours.toFixed(2)+'h adicionadas em '+cr_label(key)+' no dia de hoje!');
+  alert('✓ '+addMins+'min adicionados em '+cr_label(key)+' no dia de hoje!');
 }
 function cr_label(key){return {mat:'Matemática',por:'Português',red:'Redação'}[key]||key;}
 
@@ -859,10 +875,10 @@ function renderSummary(){
   var totalMat=0,totalPor=0,totalRed=0,totalExtra=0;
   DAYS.forEach(function(d){
     var dd=wkData[d.key]||{};
-    totalMat+=parseFloat(dd.mat_h)||0;
-    totalPor+=parseFloat(dd.por_h)||0;
-    totalRed+=parseFloat(dd.red_h)||0;
-    totalExtra+=(parseFloat(dd.extra_cursinho)||0)+(parseFloat(dd.extra_escola)||0)+(parseFloat(dd.extra_outro)||0);
+    totalMat+=minsToHours(dd.mat_h);
+    totalPor+=minsToHours(dd.por_h);
+    totalRed+=minsToHours(dd.red_h);
+    totalExtra+=minsToHours(dd.extra_cursinho)+minsToHours(dd.extra_escola)+minsToHours(dd.extra_outro);
   });
   var grandTotal=totalMat+totalPor+totalRed+totalExtra;
 
@@ -875,7 +891,7 @@ function renderSummary(){
     var pct=Math.min(100,Math.round((grandTotal/metaUsada)*100));
 
     document.getElementById('v-meta').textContent=metaUsada.toFixed(1)+'h';
-    document.getElementById('v-est').textContent=grandTotal.toFixed(1)+'h';
+    document.getElementById('v-est').textContent=fmtHours(grandTotal);
     var sEl=document.getElementById('v-saldo');
     if(grandTotal===0){sEl.textContent='—';sEl.className='metric-value';}
     else if(saldo>=0){sEl.textContent='+'+saldo.toFixed(1)+'h';sEl.className='metric-value pos';}
@@ -891,8 +907,8 @@ function renderSummary(){
     var maxBar=Math.max(totalMat,totalPorRed,0.1);
     document.getElementById('prop-bar-mat').style.width=Math.min(100,(totalMat/maxBar)*100)+'%';
     document.getElementById('prop-bar-por').style.width=Math.min(100,(totalPorRed/maxBar)*100)+'%';
-    document.getElementById('prop-val-mat').textContent=totalMat.toFixed(1)+'h';
-    document.getElementById('prop-val-por').textContent=totalPorRed.toFixed(1)+'h';
+    document.getElementById('prop-val-mat').textContent=fmtHours(totalMat);
+    document.getElementById('prop-val-por').textContent=fmtHours(totalPorRed);
     var propEl=document.getElementById('prop-status');
     if(totalMat===0&&totalPorRed===0){propEl.textContent='Sem dados ainda';propEl.className='prop-status';}
     else{
@@ -918,9 +934,9 @@ function renderSummary(){
       var humor=dd.humor!=null?HUMORES[dd.humor]:'';
       var tTxt=day.target===0?'livre':day.target<1?'40min':day.target+'h';
       var mats=[];
-      if(parseFloat(dd.mat_h))mats.push('Mat '+parseFloat(dd.mat_h)+'h');
-      if(parseFloat(dd.por_h))mats.push('Por '+parseFloat(dd.por_h)+'h');
-      if(parseFloat(dd.red_h))mats.push('Red '+parseFloat(dd.red_h)+'h');
+      if(parseFloat(dd.mat_h))mats.push('Mat '+fmtMins(dd.mat_h));
+      if(parseFloat(dd.por_h))mats.push('Por '+fmtMins(dd.por_h));
+      if(parseFloat(dd.red_h))mats.push('Red '+fmtMins(dd.red_h));
       return '<div class="drow">'+
         '<span style="display:flex;flex-direction:column;gap:1px">'+
           '<span style="font-weight:600;color:#374151">'+day.label+' <span style="font-size:11px;color:#9CA3AF;font-weight:400">('+tTxt+')</span></span>'+
