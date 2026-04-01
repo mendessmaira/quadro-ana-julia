@@ -8,9 +8,27 @@
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FFF9F0;color:#1C1C3A;min-height:100vh;padding:20px 16px 48px}
   .page{max-width:520px;margin:0 auto}
-  .hero{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:20px;padding:18px 20px;color:white;margin-bottom:20px;box-shadow:0 6px 20px rgba(102,126,234,.35)}
-  .hero h1{font-size:1.4rem;font-weight:800;margin-bottom:2px}
-  .hero p{font-size:.82rem;opacity:.85;font-weight:600}
+
+  /* ===== TELA DE SENHA ===== */
+  #login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:20px}
+  .login-card{background:white;border-radius:24px;padding:32px 28px;width:100%;max-width:340px;box-shadow:0 8px 32px rgba(102,126,234,.15);border:1.5px solid #E5E7EB;text-align:center}
+  .login-icon{font-size:2.5rem;margin-bottom:12px}
+  .login-title{font-size:1.2rem;font-weight:800;color:#1C1C3A;margin-bottom:4px}
+  .login-sub{font-size:13px;color:#9CA3AF;margin-bottom:24px;font-weight:600}
+  .login-input{width:100%;font-size:15px;padding:12px 14px;border:1.5px solid #E5E7EB;border-radius:12px;background:#F9FAFB;color:#1C1C3A;text-align:center;font-family:inherit;letter-spacing:2px;margin-bottom:12px}
+  .login-input:focus{outline:none;border-color:#667eea;background:white}
+  .login-btn{width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity .2s}
+  .login-btn:hover{opacity:.9}
+  .login-err{font-size:12px;color:#DC2626;font-weight:600;margin-top:4px;min-height:18px}
+
+  /* ===== APP ===== */
+  #app{display:none}
+  .hero{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:20px;padding:18px 20px;color:white;margin-bottom:20px;box-shadow:0 6px 20px rgba(102,126,234,.35);display:flex;align-items:center;justify-content:space-between}
+  .hero-text h1{font-size:1.3rem;font-weight:800;margin-bottom:2px}
+  .hero-text p{font-size:.8rem;opacity:.85;font-weight:600}
+  .logout-btn{font-size:12px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 12px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .logout-btn:hover{background:rgba(255,255,255,.25)}
+
   .sync-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:9px 13px;background:white;border-radius:12px;border:1.5px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.06)}
   .sdot{width:9px;height:9px;border-radius:50%;background:#9E9E9E;flex-shrink:0;transition:background .3s}
   .sdot.ok{background:#43A047}.sdot.loading{background:#FB8C00;animation:pulse 1s infinite}.sdot.err{background:#E53935}
@@ -18,12 +36,14 @@
   .stxt{font-size:12px;color:#6B7280;flex:1}
   .srefresh{font-size:12px;color:#9CA3AF;cursor:pointer;background:none;border:none;padding:0;font-family:inherit}
   .srefresh:hover{color:#1C1C3A}
+
   .week-nav{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
   .wk-label{font-size:14px;font-weight:700;color:#1C1C3A}
   .btn{background:white;border:1.5px solid #E5E7EB;border-radius:50px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;color:#1C1C3A;font-family:inherit;transition:all .15s}
   .btn:hover{border-color:#667eea;color:#667eea}
   .btn-reset{margin-left:auto;font-size:12px;color:#9CA3AF;background:white;border:1.5px solid #F3F4F6;border-radius:50px;padding:6px 12px;cursor:pointer;font-family:inherit}
   .btn-reset:hover{border-color:#FCA5A5;color:#EF4444}
+
   .cards{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
   .card{background:white;border-radius:16px;border:1.5px solid #E5E7EB;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
   .card.done{border-left:4px solid #43A047}
@@ -55,6 +75,7 @@
   .note-wrap textarea{width:100%;font-size:13px;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:10px;background:#F9FAFB;color:#1C1C3A;resize:none;height:38px;font-family:inherit;line-height:1.4}
   .note-wrap textarea:focus{outline:none;border-color:#667eea;background:white}
   .divider{height:1px;background:#F3F4F6}
+
   .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
   .metric{background:white;border-radius:14px;padding:13px;border:1.5px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.04)}
   .metric-label{font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:4px}
@@ -73,72 +94,137 @@
 </style>
 </head>
 <body>
+
+<!-- TELA DE SENHA -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-icon">🪖</div>
+    <div class="login-title">Quadro da Ana Júlia</div>
+    <div class="login-sub">Digite a senha para acessar</div>
+    <input class="login-input" type="password" id="pwd-input" placeholder="••••••••••••"
+      onkeydown="if(event.key==='Enter')checkPwd()">
+    <button class="login-btn" onclick="checkPwd()">Entrar</button>
+    <div class="login-err" id="pwd-err"></div>
+  </div>
+</div>
+
+<!-- APP PRINCIPAL -->
+<div id="app">
 <div class="page">
   <div class="hero">
-    <h1>🪖 Meu Quadro de Controle</h1>
-    <p>Ana Júlia · CMBH 2025 · Educação, Cultura e Saber</p>
+    <div class="hero-text">
+      <h1>🪖 Meu Quadro de Controle</h1>
+      <p>Ana Júlia · CMBH 2025 · Educação, Cultura e Saber</p>
+    </div>
+    <button class="logout-btn" onclick="logout()">Sair</button>
   </div>
+
   <div class="sync-bar">
     <div class="sdot" id="sdot"></div>
-    <span class="stxt" id="stxt">Carregando Firebase...</span>
+    <span class="stxt" id="stxt">Carregando...</span>
     <button class="srefresh" onclick="loadWeek()">↻ atualizar</button>
   </div>
+
   <div class="week-nav">
     <button class="btn" onclick="changeWeek(-1)">‹ anterior</button>
     <span class="wk-label" id="wk-label"></span>
     <button class="btn" onclick="changeWeek(1)">próxima ›</button>
     <button class="btn-reset" onclick="resetWeek()">limpar semana</button>
   </div>
+
   <div id="loading-msg">Conectando ao banco de dados...</div>
   <div class="cards" id="cards" style="display:none"></div>
+
   <div class="summary" id="summary" style="display:none">
     <div class="metric"><div class="metric-label">Meta da semana</div><div class="metric-value" id="v-meta">—</div></div>
     <div class="metric"><div class="metric-label">Horas estudadas</div><div class="metric-value" id="v-est">0h</div></div>
     <div class="metric"><div class="metric-label">Saldo</div><div class="metric-value" id="v-saldo">—</div></div>
   </div>
+
   <div id="prog-wrap" style="display:none">
     <div class="prog-label"><span>Progresso da semana</span><span id="v-pct">0%</span></div>
     <div class="prog-bg"><div class="prog-bar" id="v-bar" style="width:0%"></div></div>
   </div>
+
   <div class="detail-box" id="detail-box" style="display:none">
     <div class="detail-title">Saldo por dia</div>
     <div id="v-detail"></div>
   </div>
+
   <div class="footer">rotina-ana-julia · dados salvos em tempo real no Firebase</div>
 </div>
+</div>
 
-<!-- Firebase carregado de forma sequencial e segura -->
 <script>
-  var FB_CONFIG = {
-    apiKey: "AIzaSyC1ryr1iZP_7X4jJlLEPQ0Nqnv2zZNGad8",
-    authDomain: "rotina-ana-julia.firebaseapp.com",
-    databaseURL: "https://rotina-ana-julia-default-rtdb.firebaseio.com",
-    projectId: "rotina-ana-julia",
-    storageBucket: "rotina-ana-julia.firebasestorage.app",
-    messagingSenderId: "8959975065",
-    appId: "1:8959975065:web:0d2fff09f101ac86d92208"
-  };
+// ===== SENHA =====
+var SENHA = 'soucmbh2027';
 
-  function loadScript(src, cb) {
-    var s = document.createElement('script');
-    s.src = src;
-    s.onload = cb;
-    s.onerror = function() {
-      document.getElementById('stxt').textContent = 'Erro ao carregar Firebase. Verifique sua internet.';
-      document.getElementById('sdot').className = 'sdot err';
-      document.getElementById('loading-msg').textContent = 'Não foi possível conectar. Verifique sua internet e recarregue a página.';
-    };
-    document.head.appendChild(s);
+function checkPwd() {
+  var val = document.getElementById('pwd-input').value;
+  if (val === SENHA) {
+    sessionStorage.setItem('qc_auth', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initFirebase();
+  } else {
+    var err = document.getElementById('pwd-err');
+    err.textContent = 'Senha incorreta. Tente novamente.';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+    setTimeout(function(){ err.textContent = ''; }, 3000);
   }
+}
 
-  // Carrega app primeiro, depois database, só então inicia o app
+function logout() {
+  sessionStorage.removeItem('qc_auth');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pwd-input').value = '';
+}
+
+// Mantém sessão ao recarregar
+if (sessionStorage.getItem('qc_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+// ===== FIREBASE =====
+var FB_CONFIG = {
+  apiKey: "AIzaSyC1ryr1iZP_7X4jJlLEPQ0Nqnv2zZNGad8",
+  authDomain: "rotina-ana-julia.firebaseapp.com",
+  databaseURL: "https://rotina-ana-julia-default-rtdb.firebaseio.com",
+  projectId: "rotina-ana-julia",
+  storageBucket: "rotina-ana-julia.firebasestorage.app",
+  messagingSenderId: "8959975065",
+  appId: "1:8959975065:web:0d2fff09f101ac86d92208"
+};
+
+function loadScript(src, cb) {
+  var s = document.createElement('script');
+  s.src = src;
+  s.onload = cb;
+  s.onerror = function() {
+    setSync('err', 'Erro ao carregar. Verifique sua internet.');
+  };
+  document.head.appendChild(s);
+}
+
+function initFirebase() {
+  if (window.db) { loadWeek(); return; }
+  setSync('loading', 'Conectando...');
   loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js', function() {
     loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js', function() {
       firebase.initializeApp(FB_CONFIG);
       window.db = firebase.database();
-      initApp();
+      loadWeek();
     });
   });
+}
+
+// Se já estava autenticado e app está visível, inicia firebase
+if (sessionStorage.getItem('qc_auth') === '1') {
+  window.addEventListener('DOMContentLoaded', function() { initFirebase(); });
+}
 </script>
 
 <script>
@@ -149,15 +235,15 @@ var HUMOR_LABELS = ['Esgotada','Cansada','Ok','Bem','Ótima'];
 var DIFF_LABELS  = ['Muito difícil','Difícil','Normal','Fácil','Tranquilo'];
 
 var DAYS = [
-  {key:'seg',label:'Segunda',target:0.67,meta:'40 min — estudo CMBH',   checks:['Dever de casa','Estudo CMBH']},
-  {key:'ter',label:'Terça',  target:0.67,meta:'40 min — estudo CMBH',   checks:['Dever de casa','Estudo CMBH']},
-  {key:'qua',label:'Quarta', target:0.67,meta:'40 min — estudo CMBH',   checks:['Dever de casa','Estudo CMBH']},
-  {key:'qui',label:'Quinta', target:0.67,meta:'40 min — estudo CMBH',   checks:['Dever de casa','Estudo CMBH']},
-  {key:'sex',label:'Sexta',  target:0,   meta:'Descanso — só dever',    checks:['Dever de casa']},
+  {key:'seg',label:'Segunda',target:0.67,meta:'40 min — estudo CMBH',      checks:['Dever de casa','Estudo CMBH']},
+  {key:'ter',label:'Terça',  target:0.67,meta:'40 min — estudo CMBH',      checks:['Dever de casa','Estudo CMBH']},
+  {key:'qua',label:'Quarta', target:0.67,meta:'40 min — estudo CMBH',      checks:['Dever de casa','Estudo CMBH']},
+  {key:'qui',label:'Quinta', target:0.67,meta:'40 min — estudo CMBH',      checks:['Dever de casa','Estudo CMBH']},
+  {key:'sex',label:'Sexta',  target:0,   meta:'Descanso — só dever',       checks:['Dever de casa']},
   {key:'sab',label:'Sábado', target:5,   meta:'5h — 3 blocos + 2 revisão', checks:['Bloco 1','Bloco 2','Bloco 3','Bloco 4','Bloco 5']},
-  {key:'dom',label:'Domingo',target:2,   meta:'2h — 2 blocos tarde',    checks:['Bloco 1','Bloco 2']},
+  {key:'dom',label:'Domingo',target:2,   meta:'2h — 2 blocos tarde',       checks:['Bloco 1','Bloco 2']},
 ];
-var WEEK_META = DAYS.reduce(function(s,d){return s+d.target},0);
+var WEEK_META = DAYS.reduce(function(s,d){return s+d.target;},0);
 
 var wkOffset=0, wkData={}, saveTimer=null, dbRef=null, listener=null;
 
@@ -167,7 +253,7 @@ function getMonday(off){
   m.setDate(now.getDate()-(day===0?6:day-1)+off*7);
   return m.toISOString().slice(0,10);
 }
-function wkKey(){return 'semana_'+getMonday(wkOffset).replace(/-/g,'')}
+function wkKey(){return 'semana_'+getMonday(wkOffset).replace(/-/g,'');}
 function fmtD(iso,i){
   var d=new Date(iso+'T12:00:00');
   d.setDate(d.getDate()+i);
@@ -185,24 +271,17 @@ function showApp(){
   document.getElementById('detail-box').style.display='block';
 }
 
-function initApp(){
-  setSync('loading','Conectando...');
-  loadWeek();
-}
-
 function loadWeek(){
   setSync('loading','Carregando...');
   if(listener && dbRef) dbRef.off('value', listener);
   dbRef = window.db.ref('quadro/'+wkKey());
   listener = dbRef.on('value', function(snap){
-    var val = snap.val();
-    wkData = val || {};
+    wkData = snap.val() || {};
     setSync('ok','Sincronizado — '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
     showApp();
     renderAll();
   }, function(){
     setSync('err','Erro de conexão — verifique a internet');
-    document.getElementById('loading-msg').textContent='Erro ao conectar. Verifique sua internet.';
   });
 }
 
@@ -216,7 +295,7 @@ function scheduleSave(){
   },800);
 }
 
-function changeWeek(d){wkOffset+=d;loadWeek();}
+function changeWeek(d){wkOffset+=d; loadWeek();}
 
 function resetWeek(){
   if(!confirm('Limpar todos os dados desta semana?'))return;
@@ -252,15 +331,13 @@ function renderCards(){
     card.className='card'+(status?' '+status:'');
 
     var checksHtml=day.checks.map(function(ch){
-      var isChecked=dd.checks&&dd.checks[ch];
-      return '<label class="chk'+(isChecked?' checked':'')+'">'+
-        '<input type="checkbox" data-day="'+day.key+'" data-chk="'+ch+'" '+(isChecked?'checked':'')+'>'+ch+'</label>';
+      var ok=dd.checks&&dd.checks[ch];
+      return '<label class="chk'+(ok?' checked':'')+'"><input type="checkbox" data-day="'+day.key+'" data-chk="'+ch+'" '+(ok?'checked':'')+'>'+ch+'</label>';
     }).join('');
 
     var matsHtml=MATERIAS.map(function(m){
-      var isOn=dd.mats&&dd.mats[m];
-      return '<label class="mat'+(isOn?' on':'')+'">'+
-        '<input type="checkbox" data-day="'+day.key+'" data-mat="'+m+'" '+(isOn?'checked':'')+'>'+m+'</label>';
+      var on=dd.mats&&dd.mats[m];
+      return '<label class="mat'+(on?' on':'')+'"><input type="checkbox" data-day="'+day.key+'" data-mat="'+m+'" '+(on?'checked':'')+'>'+m+'</label>';
     }).join('');
 
     var humorHtml=HUMORES.map(function(e,idx){
@@ -273,17 +350,12 @@ function renderCards(){
 
     var hoursSection=day.target>0?
       '<div class="divider"></div>'+
-      '<div class="hours-row">'+
-        '<span class="hl">Horas estudadas:</span>'+
-        '<input class="hi" type="number" min="0" max="12" step="0.5" placeholder="0" value="'+(dd.hours||'')+'" data-day="'+day.key+'" data-field="hours">'+
-      '</div>':'';
+      '<div class="hours-row"><span class="hl">Horas estudadas:</span>'+
+      '<input class="hi" type="number" min="0" max="12" step="0.5" placeholder="0" value="'+(dd.hours||'')+'" data-day="'+day.key+'" data-field="hours"></div>':'';
 
     card.innerHTML=
       '<div class="card-header">'+
-        '<div>'+
-          '<div class="day-name">'+day.label+'</div>'+
-          '<div class="day-meta">'+fmtD(mon,i)+' · '+day.meta+'</div>'+
-        '</div>'+
+        '<div><div class="day-name">'+day.label+'</div><div class="day-meta">'+fmtD(mon,i)+' · '+day.meta+'</div></div>'+
         '<div class="target-badge">'+targetTxt+'</div>'+
       '</div>'+
       '<div class="card-body">'+
@@ -314,7 +386,6 @@ function renderCards(){
       scheduleSave();
     });
   });
-
   c.querySelectorAll('input[data-mat]').forEach(function(el){
     el.addEventListener('change',function(){
       var dd=dayData(el.dataset.day);
@@ -324,7 +395,6 @@ function renderCards(){
       scheduleSave();
     });
   });
-
   c.querySelectorAll('input[data-field="hours"]').forEach(function(el){
     el.addEventListener('input',function(){
       var dd=dayData(el.dataset.day);
@@ -342,31 +412,24 @@ function renderCards(){
       scheduleSave();
     });
   });
-
   c.querySelectorAll('button[data-humor]').forEach(function(el){
     el.addEventListener('click',function(){
       var dd=dayData(el.dataset.day);
       var idx=parseInt(el.dataset.humor);
       dd.humor=dd.humor===idx?null:idx;
-      el.closest('.emoji-row').querySelectorAll('.ebtn').forEach(function(b,i){
-        b.className='ebtn'+(dd.humor===i?' sel':'');
-      });
+      el.closest('.emoji-row').querySelectorAll('.ebtn').forEach(function(b,i){b.className='ebtn'+(dd.humor===i?' sel':'');});
       scheduleSave();
     });
   });
-
   c.querySelectorAll('button[data-diff]').forEach(function(el){
     el.addEventListener('click',function(){
       var dd=dayData(el.dataset.day);
       var idx=parseInt(el.dataset.diff);
       dd.diff=dd.diff===idx?null:idx;
-      el.closest('.emoji-row').querySelectorAll('.ebtn').forEach(function(b,i){
-        b.className='ebtn'+(dd.diff===i?' sel':'');
-      });
+      el.closest('.emoji-row').querySelectorAll('.ebtn').forEach(function(b,i){b.className='ebtn'+(dd.diff===i?' sel':'');});
       scheduleSave();
     });
   });
-
   c.querySelectorAll('textarea[data-field="note"]').forEach(function(el){
     el.addEventListener('input',function(){
       var dd=dayData(el.dataset.day);
